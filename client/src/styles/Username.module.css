@@ -24,3 +24,11 @@
 .btn:hover {
     background-color: #ff6a6a;
 }
+
+.btn_link{
+    @apply border-0 outline-none;
+}
+
+.btn_link:hover{
+    @apply cursor-pointer
+}
