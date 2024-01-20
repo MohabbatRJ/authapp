@@ -14,7 +14,7 @@ export async function passwordValidate(values) {
     return errors
 }
 
-// reset password page
+// validate reset password page
 export async function resetPasswordValidate(values) {
     const errors = passwordVerify({}, values);
 
@@ -26,11 +26,19 @@ export async function resetPasswordValidate(values) {
 }
 
 
-// register page
+// validate register page
 export async function registerValidation(values){
     const errors = usernameVerify({}, values);
     passwordVerify(errors, values);
     emailVerify(errors, values);
+
+    return errors;
+}
+
+
+// validate profile page
+export async function profileValidation(values) {
+    const errors = emailVerify({}, values);
 
     return errors;
 }
