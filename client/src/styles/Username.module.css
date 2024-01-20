@@ -32,3 +32,7 @@
 .btn_link:hover{
     @apply cursor-pointer
 }
+
+input[type='file']{
+    display: none;
+}
