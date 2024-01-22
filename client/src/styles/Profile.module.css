@@ -1,11 +1,15 @@
-.glass{
-    @apply h-5/6 ;
+.glass {
+    /* @apply h-5/6 w-5/6; */
 }
 
-.profile_img{
+.profile_img {
     @apply w-40 cursor-pointer;
 }
 
-.textbox{
-    @apply w-3/4;
+.textbox {
+    @apply sm:w-3/4 w-full;
+}
+
+.name {
+    @apply flex sm:flex-nowrap flex-wrap w-full sm:w-3/4 gap-6;
 }
