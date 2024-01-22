@@ -41,10 +41,10 @@ export default function Register() {
 
       <div className=" flex justify-center items-center h-screen">
 
-        <div className={styles.glass}>
+        <div className={styles.glass} style={{ width: "45%", paddingTop: '3em' }}>
           <div className="title flex flex-col items-center">
-            <h4 className="font-5xl font-bold">Register</h4>
-            <span className="py-4 text-xl w-2/3 text-center text-gray-500">Happy to join you!</span>
+            <h4 className="text-5xl font-bold">Register</h4>
+            <span className="py-4 text-xl w-3/4 text-center text-gray-500">Happy to join you!</span>
           </div>
 
           <form onSubmit={formik.handleSubmit} className="py-1">
@@ -66,7 +66,7 @@ export default function Register() {
             </div>
 
             <div className="text-center py-4">
-              <span className="text-gray-500">Already Reister? <Link className="text-red-500" to="/">Login Now</Link> </span>
+              <span className="text-gray-500">Already Reister? <Link className={styles.btn_link} to="/">Login Now</Link> </span>
             </div>
           </form>
         </div>

@@ -44,10 +44,10 @@ export default function Profile() {
 
       <div className=" flex justify-center items-center h-screen">
 
-        <div className={`${styles.glass} ${extend.glass}`}>
+        <div className={`${styles.glass} ${extend.glass}`} style={{ width: "45%", paddingTop: '3em' }}>
           <div className="title flex flex-col items-center">
-            <h4 className="font-5xl font-bold">Profile</h4>
-            <span className="py-4 text-xl w-2/3 text-center text-gray-500">You can update the details.</span>
+            <h4 className="text-5xl font-bold">Profile</h4>
+            <span className="py-4 text-xl w-3/4 text-center text-gray-500">You can update the details.</span>
           </div>
 
           <form onSubmit={formik.handleSubmit} className="py-1">
@@ -61,23 +61,23 @@ export default function Profile() {
 
             <div className="textbox flex flex-col items-center gap-6">
 
-              <div className="name flex w-3/4 gap-10">
+              <div className={extend.name}>
                 <input type="text" placeholder="First Name" className={`${styles.textbox} ${extend.textbox}`} {...formik.getFieldProps('firstName')} />
                 <input type="text" placeholder="Last Name" className={`${styles.textbox} ${extend.textbox}`} {...formik.getFieldProps('lastName')} />
               </div>
 
-              <div className="name flex w-3/4 gap-10">
+              <div className={extend.name}>
                 <input type="text" placeholder="Mobile No." className={`${styles.textbox} ${extend.textbox}`} {...formik.getFieldProps('mobile')} />
                 <input type="text" placeholder="Email" className={`${styles.textbox} ${extend.textbox}`} {...formik.getFieldProps('email')} />
               </div>
-
-              <input type="text" placeholder="Address" className={`${styles.textbox} w-2/3`} {...formik.getFieldProps('address')} />
-              <button className={styles.btn} type="submit">Register</button>
-              
+              <div className={extend.name}>
+                <input type="text" placeholder="Address" className={`${styles.textbox} ${extend.textbox} w-full`} {...formik.getFieldProps('address')} />
+              </div>
+                <button className={`${styles.btn} ${extend.textbox}`} type="submit">Register</button>
             </div>
 
             <div className="text-center py-4">
-              <span className="text-gray-500">come back later? <Link className="text-red-500" to="/">Logout</Link> </span>
+              <span className="text-gray-500">come back later? <Link className={styles.btn_link} to="/">Logout</Link> </span>
             </div>
           </form>
         </div>
