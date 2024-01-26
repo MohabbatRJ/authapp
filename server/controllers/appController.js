@@ -14,67 +14,62 @@ import bcrypt from 'bcrypt';
 }
 */
 export async function register(req, res) {
+
     try {
         const { username, password, profile, email } = req.body;
 
-        let existUsername;
-        let existEmail;
+        // check the existing user
+        const existUsername = new Promise((resolve, reject) => {
+            UserModel.findOne({ username }).then((err, user) => {
+                if (err) reject(new Error(err))
+                if (user) reject({ error: "Please use unique username" });
 
-        // Check for existing user
-        try {
-            existUsername = await UserModel.findOne({ username }).exec();
+                resolve();
+            }).catch(err => reject({ error: "exist username findone error" }));
+        });
 
-            if (existUsername) {
-                throw new Error("Please use a unique username");
-            }
-        }
-        catch (error) {
-            console.error(error.message);
-            return res.status(500).send({ error: error.message });
-        }
+        // check for existing email
+        const existEmail = new Promise((resolve, reject) => {
+            UserModel.findOne({ email }).then((err, email) => {
+                if (err) reject(new Error(err))
+                if (email) reject({ error: "Please use unique Email" });
 
-        // Check for existing email
-        try {
-            existEmail = await UserModel.findOne({ email }).exec();
+                resolve();
+            }).catch(error => reject({ error: "exist username findone error" }));
+        });
 
-            if (existEmail) {
-                throw new Error("Please use a unique email");
-            }
-        }
-        catch (error) {
-            console.error(error.message);
-            return res.status(500).send({ error: error.message });
-        }
 
-        // Continue with your code if both username and email are unique
-        try {
-            if (password) {
-                const hashedPassword = await bcrypt.hash(password, 10);
+        Promise.all([existUsername, existEmail])
+            .then(() => {
+                if (password) {
+                    bcrypt.hash(password, 10)
+                        .then((hashedPassword) => {
 
-                const user = new UserModel({
-                    username,
-                    password: hashedPassword,
-                    profile: profile || '',
-                    email,
-                });
+                            const user = new UserModel({
+                                username,
+                                password: hashedPassword,
+                                profile: profile || '',
+                                email
+                            });
 
-                // Return save result as a response
-                const result = await user.save();
-                return res.status(201).send({ msg: "User Register Successfully", result });
-            }
-            else {
-                return res.status(201).send({ msg: "Please user valid password", result });
-            }
-        }
-        catch (error) {
-            console.error(error.message);
-            return res.status(500).send({ error: "Unable to hash password or save user" });
-        }
+                            // return save result as a response
+                            user.save()
+                                .then((result) => {
+                                    res.status(201).send({ msg: "User Register Successfully" })
+                                }).catch(error => res.status(500).send({ error }))
 
+                        }).catch((error) => {
+                            return res.status(500).send({
+                                error: "Enable to hashed password"
+                            })
+                        })
+                }
+            }).catch((error) => {
+                return res.status(500).send({ error })
+            })
     }
     catch (error) {
-        console.error(error.message);
-        return res.status(500).send({ error: "Internal Server Error" });
+        return res.status(500).send(error);
     }
 }
 
