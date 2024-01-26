@@ -1,5 +1,7 @@
 import UserModel from "../models/User.model.js";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
+import ENV from '../config.js'
 
 /** POST: http://localhost:8080/api/register 
  * @param : {
@@ -14,9 +16,9 @@ import bcrypt from 'bcrypt';
 }
 */
 export async function register(req, res) {
+    console.log(req.body)
     try {
         const { username, password, profile, email } = req.body;
-
         let existUsername;
         let existEmail;
 
@@ -60,14 +62,15 @@ export async function register(req, res) {
 
                 // Return save result as a response
                 const result = await user.save();
-                return res.status(201).send({ msg: "User Register Successfully", result });
+                console.log('result', result);
+                return res.status(200).send({ msg: "User Register Successfully" });
             }
             else {
-                return res.status(201).send({ msg: "Please user valid password", result });
+                return res.status(400).send({ msg: "Please use valid password"});
             }
         }
         catch (error) {
-            console.error(error.message);
+            console.error('catch',error.message);
             return res.status(500).send({ error: "Unable to hash password or save user" });
         }
 
@@ -86,7 +89,39 @@ export async function register(req, res) {
 }
 */
 export async function login(req, res) {
-    res.json('login route');
+    const { username, password } = req.body;
+
+    try {
+        UserModel.findOne({ username }).then((user) => {
+            bcrypt.compare(password, user.password).then((passwordCheck) => {
+                if (!passwordCheck) {
+                    return res.status(400).send({ error: "Don't have password" });
+                }
+
+                // create jwt token
+                const token = jwt.sign({
+                    userId: user._id,
+                    username: user.username,
+                }, ENV.JWT_SECRET, { expiresIn: "24h" });
+
+                return res.status(200).send({
+                    msg: "Login Success",
+                    username: user.username,
+                    token
+                });
+            })
+                .catch((error) => {
+                    return res.status(400).send({ error: "Password does not match" });
+                })
+        })
+        .catch( (error) => {
+            return res.status(400).send({ error: "Username not found" });
+        })
+    }
+    catch (error) {
+        console.error(error.message);
+        return res.status(500).send({ error: "Internal Server Error" });
+    }
 }
 
 
