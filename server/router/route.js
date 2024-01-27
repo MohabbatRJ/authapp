@@ -9,7 +9,7 @@ router.route('/register').post(controller.register);
 router.route('/authenticate').post((res, req) => {
     res.end();
 });
-router.route('/login').post(controller.login);
+router.route('/login').post(controller.verifyUser, controller.login);
 
 // GET Methods
 router.route('/user/:username').get(controller.getUser);
