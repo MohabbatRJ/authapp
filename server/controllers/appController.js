@@ -7,11 +7,11 @@ import ENV from '../config.js'
 // middleware verify user
 export async function verifyUser(req, res, next) {
     try {
-        const { username } = req.method == "GET" ? req.query : req.body; 
+        const { username } = req.method == "GET" ? req.query : req.body;
 
         // check the user existance
         let exist = await UserModel.findOne({ username });
-        if(!exist) return res.status(404).send({ error: "Can't find User!" });
+        if (!exist) return res.status(404).send({ error: "Can't find User!" });
         next();
     }
     catch (error) {
@@ -123,9 +123,9 @@ export async function login(req, res) {
                     return res.status(400).send({ error: "Don't have password" });
                 })
         })
-        .catch( (error) => {
-            return res.status(400).send({ error: "Username not found" });
-        })
+            .catch((error) => {
+                return res.status(400).send({ error: "Username not found" });
+            })
     }
     catch (error) {
         return res.status(500).send({ error: "Internal Server Error" });
@@ -135,7 +135,24 @@ export async function login(req, res) {
 
 /** GET: http://localhost:8080/api/user/mohabbatrj */
 export async function getUser(req, res) {
-    res.json('getUser route');
+    const { username } = req.params;
+    try {
+        if (!username) return res.status(400).send({ error: "Invalid Username" });
+
+        UserModel.findOne({ username }).then((user) => {
+            if (!user) return res.status(404).send({ error: "Couldn't find the User" });
+
+            // remove password from the user
+            // mongoose return unneccesary data with object so convert it into json
+            const { password, ...rest } = Object.assign({}, user.toJSON());
+            return res.status(200).send(rest);
+        }).catch((error) => {
+            return res.status(500).send({ error: "Internal Server Error" });
+        });
+    } catch (error) {
+        console.error(error); 
+        return res.status(500).send({ error: "Internal Server Error" });
+    }
 }
 
 
