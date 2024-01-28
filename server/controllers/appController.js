@@ -128,24 +128,28 @@ export async function login(req, res) {
 /** GET: http://localhost:8080/api/user/mohabbatrj */
 export async function getUser(req, res) {
     const { username } = req.params;
+
     try {
-        if (!username) return res.status(400).send({ error: "Invalid Username" });
+        if (!username) {
+            return res.status(400).send({ error: "Invalid Username" });
+        }
 
-        UserModel.findOne({ username }).then((user) => {
-            if (!user) return res.status(404).send({ error: "Couldn't find the User" });
+        const user = await UserModel.findOne({ username });
 
-            // remove password from the user
-            // mongoose return unneccesary data with object so convert it into json
-            const { password, ...rest } = Object.assign({}, user.toJSON());
-            return res.status(200).send(rest);
-        }).catch((error) => {
-            return res.status(500).send({ error: "Internal Server Error" });
-        });
+        if (!user) {
+            return res.status(404).send({ error: "Couldn't find the User" });
+        }
+
+        // Remove password from the user
+        // Mongoose returns unnecessary data with object, so convert it into JSON
+        const { password, ...rest } = Object.assign({}, user.toJSON());
+        return res.status(200).send(rest);
     } catch (error) {
-        console.error(error); 
+        console.error(error);
         return res.status(500).send({ error: "Internal Server Error" });
     }
 }
+
 
 
 /** PUT: http://localhost:8080/api/updateUser 
