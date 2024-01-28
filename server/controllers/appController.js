@@ -168,30 +168,27 @@ body: {
 */
 export async function updateUser(req, res) {
     try {
-
-        // const id = req.query.id;
-        const { userId } = req.user;
-
+        const  userId  = req.query.id;
+        console.log(userId);
         if (userId) {
             const body = req.body;
 
-            // update the data
-            UserModel.updateOne({ _id: userId }, body).then((err, data) => {
-                if (err) throw err;
-                console.log(data)
-                return res.status(201).send({ msg: "Record Updated...!" });
-            }).catch((error) => {
-                return res.status(500).send({ error: "Internal Server Error" });
-            });
+            // Update the data
+            const updateResult = await UserModel.updateOne({ _id: userId }, body);
 
+            if (updateResult.modifiedCount>0) {
+                return res.status(201).send({ msg: "Record Updated...!" });
+            } else {
+                return res.status(500).send({ error: "Record Not Update" });
+            }
         } else {
             return res.status(401).send({ error: "User Not Found...!" });
         }
-
     } catch (error) {
-        return res.status(401).send({ error });
+        return res.status(401).send({ error: "Internal Server Error" });
     }
 }
+
 
 
 
