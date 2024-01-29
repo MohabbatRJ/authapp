@@ -164,7 +164,8 @@ body: {
 */
 export async function updateUser(req, res) {
     try {
-        const  userId  = req.query.id;
+        // const  userId  = req.query.id;
+        const { userId } = req.user;
         console.log(userId);
         if (userId) {
             const body = req.body;
@@ -186,12 +187,9 @@ export async function updateUser(req, res) {
 }
 
 
-
-
-
 /** GET: http://localhost:8080/api/generateOTP */
 export async function generateOTP(req, res) {
-    res.json('generateOTP route');
+    
 }
 
 
