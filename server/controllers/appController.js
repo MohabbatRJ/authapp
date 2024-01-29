@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import ENV from '../config.js'
 import otpGenerator from 'otp-generator';
+import { tryReleaseFile } from "mongodb-memory-server-core/lib/util/utils.js";
 
 // middleware verify user
 export async function verifyUser(req, res, next) {
@@ -220,5 +221,37 @@ export async function createResetSession(req, res) {
 // update the password when we have valid session
 /** PUT: http://localhost:8080/api/resetPassword */
 export async function resetPassword(req, res) {
-    res.json('resetPassword route');
+    try {
+        
+        if (!req.app.locals.resetSession) {
+            return res.status(401).send({ error: "Session expired!" });
+        }
+        const { username, password } = req.body;
+
+        try {
+            const user = await UserModel.findOne({ username });
+
+            if (!user) {
+                return res.status(404).send({ error: "Username not found!" });
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const updateResult = await UserModel.updateOne(
+                { username: user.username },
+                { password: hashedPassword }
+            );
+
+            if (updateResult.modifiedCount > 0) {
+                req.app.locals.resetSession = false;
+                return res.status(201).send({ msg: "Record Updated...!" });
+            } else {
+                return res.status(500).send({ error: "Internal Server Error" });
+            }
+        } catch (error) {
+            return res.status(500).send({ error: "Internal Server Error" });
+        }
+    } catch (error) {
+        return res.status(401).send({ error });
+    }
 }
