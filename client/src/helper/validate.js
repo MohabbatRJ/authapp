@@ -7,7 +7,6 @@ export async function usernameValidate(values) {
     const errors = usernameVerify({}, values);
     if (values.username) {
         // check user exist or not
-        console.log('values.usernames', values.username)
         const { status } = await authenticate(values.username);
         // let status = 201;
         if (status !== 200) {

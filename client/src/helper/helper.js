@@ -7,10 +7,8 @@ axios.defaults.baseURL = "http://localhost:8080";
 
 // authenticate function
 export async function authenticate(username) {
-    console.log('response', await axios.post('/api/authenticate', { username }))
     try {
-        const response = await axios.post('/api/authenticate', { username });
-        return response.data;
+        return await axios.post('/api/authenticate', { username });
     }
     catch (error) {
         return { error: 'Authentication failed. Username does not exist...!' };
@@ -25,7 +23,7 @@ export async function getUser({ username }) {
         return response.data;
     }
     catch (error) {
-        return handleRequestError(error, 'Error fetching user data. Please try again.');
+        return { error: 'Error fetching user data. Please try again.' };
     }
 }
 
