@@ -1,12 +1,13 @@
 import axios from 'axios';
 
 
-axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
+axios.defaults.baseURL = "http://localhost:8080";
 // make api request
 
 
 // authenticate function
 export async function authenticate(username) {
+    console.log('response', await axios.post('/api/authenticate', { username }))
     try {
         const response = await axios.post('/api/authenticate', { username });
         return response.data;
