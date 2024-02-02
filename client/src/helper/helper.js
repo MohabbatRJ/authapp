@@ -1,15 +1,14 @@
 import axios from 'axios';
 
 
-axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
+axios.defaults.baseURL = "http://localhost:8080";
 // make api request
 
 
 // authenticate function
 export async function authenticate(username) {
     try {
-        const response = await axios.post('/api/authenticate', { username });
-        return response.data;
+        return await axios.post('/api/authenticate', { username });
     }
     catch (error) {
         return { error: 'Authentication failed. Username does not exist...!' };
@@ -24,7 +23,7 @@ export async function getUser({ username }) {
         return response.data;
     }
     catch (error) {
-        return handleRequestError(error, 'Error fetching user data. Please try again.');
+        return { error: 'Error fetching user data. Please try again.' };
     }
 }
 
