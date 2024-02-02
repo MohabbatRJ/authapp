@@ -12,7 +12,7 @@ export async function authenticate(username) {
         return response.data;
     }
     catch (error) {
-        return handleRequestError(error, 'Authentication failed. Username does not exist...!');
+        return { error: 'Authentication failed. Username does not exist...!' };
     }
 }
 
@@ -42,7 +42,7 @@ export async function registerUser(credential) {
         return msg;
     }
     catch (error) {
-        return handleRequestError(error, 'Error registering user. Please try again.');
+        return { error: 'Error registering user. Please try again.' };
     }
 }
 
@@ -55,7 +55,7 @@ export async function verifyPassword({ username, password }) {
         }
     }
     catch (error) {
-        return handleRequestError(error, "Password doesn't Match. Please try again.");
+        return { error: "Password doesn't Match. Please try again." };
     }
 }
 
@@ -68,7 +68,7 @@ export async function updateUser(responseData) {
         return response.data;
     }
     catch (error) {
-        return handleRequestError(error, "Couldn't Update Profile.");
+        return { error: "Couldn't Update Profile." };
     }
 }
 
@@ -87,7 +87,7 @@ export async function generateOTP(username) {
         return code;
     }
     catch (error) {
-        return handleRequestError(error, "Couldn't generate OTP.");
+        return { error: "Couldn't generate OTP." };
     }
 }
 
@@ -98,7 +98,7 @@ export async function verifyOTP({username, code}) {
         return {data, status};
     }
     catch (error) {
-        return handleRequestError(error, "Couldn't verify OTP.");
+        return { error: "Couldn't verify OTP." };
     }
 }
 
@@ -109,22 +109,6 @@ export async function resetPassword({ username, password }) {
         return { data, status };
     }
     catch (error) {
-        return handleRequestError(error, "Couldn't reset Password.");
+        return { error: "Couldn't reset Password." };
     }
-}
-
-
-
-// handle error
-function handleRequestError(error, defaultMessage) {
-    if (error.response) {
-        console.error('Server responded with an error status:', error.response.status);
-        console.error('Response data:', error.response.data);
-    } else if (error.request) {
-        console.error('No response received from the server');
-    } else {
-        console.error('Error during request setup:', error.message);
-    }
-
-    throw { error: defaultMessage };
 }
