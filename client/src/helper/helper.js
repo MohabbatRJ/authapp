@@ -1,9 +1,17 @@
 import axios from 'axios';
-
+import { jwtDecode } from 'jwt-decode'
 
 axios.defaults.baseURL = "http://localhost:8080";
 // make api request
 
+// to get username form token
+export async function getUsername() {
+    const token = localStorage.getItem('token');
+
+    if (!token) return Promise.reject("Can't find token");
+    let decode = jwtDecode(token);
+    return decode;
+}
 
 // authenticate function
 export async function authenticate(username) {
