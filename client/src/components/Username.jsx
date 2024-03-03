@@ -44,7 +44,7 @@ export default function Username() {
             </div>
 
             <div className="textbox flex flex-col items-center gap-6">
-              <input type="text" placeholder="Username" className={ styles.textbox } {...formik.getFieldProps('username')} />
+              <input autoComplete="false" type="text" placeholder="Username" className={styles.textbox} {...formik.getFieldProps('username')} />
               <button className={styles.btn} type="submit">Let&#39;s Go</button>
             </div>
 
